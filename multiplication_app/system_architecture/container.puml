@@ -1,0 +1,20 @@
+@startuml social-multiplication
+!include <C4/C4_Container>
+
+title Social Multiplication Container
+
+Person(person, "Anonymous User", "anyone using our application")
+
+System_Boundary(boundary, "Social Multiplication", ){
+    Container(web_app, "Web App", "Java, Spring MVC", "Main point for client interaction with our app")
+    Container(spa, "SPA", "HTML, CSS, Javascipt", "Renders the interface for the web app")
+    Container(api, "API", "Java, Spring MVC", "Provides the business logic for our app")
+    ContainerDb(db, "Database", "H2, jdbc")
+}
+
+Rel(person, web_app, "Solves questions on", "HTTP/S")
+Rel(spa, web_app, "Provides UI for")
+Rel(spa, api, "Makes API calls to", "HTTP/S")
+Rel(api, db, "Store app data")
+
+@enduml

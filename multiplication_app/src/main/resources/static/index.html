@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Multiplication</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Jquery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body class="bg-gray-500">
+    <div class="flex flex-col items-center justify-center h-screen w-full">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 bg-neutral-300 rounded-lg w-1/2 h-[220px] mb-5"
+      >
+        <div
+          class="flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-400"
+        >
+          <p class="mb-3 text-2xl">
+            <span id="factorA" class="font-bold text-4xl"></span> X
+            <span id="factorB" class="font-bold text-4xl"></span>
+          </p>
+        </div>
+
+        <div class="pt-5">
+          <form action="" method="post">
+            <div class="px-3">
+              <label
+                for="alias"
+                class="block mb-2 text-sm font-medium text-black text-center"
+                >Username(Alias)</label
+              >
+              <input
+                type="text"
+                id="alias"
+                class="bg-white border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-center"
+                placeholder="John"
+                required
+              />
+            </div>
+            <div class="px-3 mt-5">
+              <label
+                for="attempt"
+                class="block mb-2 text-sm font-medium text-black text-center"
+                >Solution</label
+              >
+              <input
+                type="text"
+                id="attempt"
+                class="bg-white border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-center"
+                placeholder="40"
+                required
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="result-banner"
+        class="flex items-center justify-center mt-1 mb-4 bg-red-500 w-[220px] h-10 rounded-xl text-white"
+      >
+        bread
+      </div>
+
+      <div>
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">Product name</th>
+              <th scope="col" class="px-6 py-3">Color</th>
+              <th scope="col" class="px-6 py-3">Category</th>
+              <th scope="col" class="px-6 py-3">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Apple MacBook Pro 17"
+              </th>
+              <td class="px-6 py-4">Silver</td>
+              <td class="px-6 py-4">Laptop</td>
+              <td class="px-6 py-4">$2999</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Microsoft Surface Pro
+              </th>
+              <td class="px-6 py-4">White</td>
+              <td class="px-6 py-4">Laptop PC</td>
+              <td class="px-6 py-4">$1999</td>
+            </tr>
+            <tr class="bg-white dark:bg-gray-800">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Magic Mouse 2
+              </th>
+              <td class="px-6 py-4">Black</td>
+              <td class="px-6 py-4">Accessories</td>
+              <td class="px-6 py-4">$99</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="./index.js"></script>
+  </body>
+</html>

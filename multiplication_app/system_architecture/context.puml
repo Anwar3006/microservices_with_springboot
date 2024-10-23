@@ -1,0 +1,8 @@
+@startuml social_multiplication
+!include <C4/C4_Container>
+
+Person(person, "Anonymous User", "anyone using our application")
+Container(web_app, "Social Multiplication", "Java, Spring MVC", "app serves random multiplication for users to solve")
+
+Rel(person, web_app, "Solves questions on", "HTTPS")
+@enduml
