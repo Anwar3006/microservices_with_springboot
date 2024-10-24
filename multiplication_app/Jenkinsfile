@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_DIR = "multiplication_app"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/Anwar3006/microservices_with_springboot.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building project with Maven..'
+                sh "pwd"
+                sh "mvn clean install -f ${PROJECT_DIR}/pom.xml"
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running Tests..'
+                sh "mvn test -f ${PROJECT_DIR}/pom.xml"
+            }
+        }
+        stage('Package') {
+            steps {
+                echo 'Packaging project with Maven..'
+                sh "mvn package -f ${PROJECT_DIR}/pom.xml"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Add your deployment steps here, e.g., using SCP, SSH, Docker, etc.
+                echo 'Deploying....'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and Deploy succeeded!'
+        }
+        failure {
+            echo 'Build or Deploy failed!'
+        }
+    }
+}
