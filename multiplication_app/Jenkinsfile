@@ -14,9 +14,16 @@ pipeline {
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.8.6-jdk-11' // Example Maven Docker image
+                    args '-v /root/.m2:/root/.m2' // Persist Maven dependencies between builds
+                    reuseNode true
+                }
+            }
             steps {
                 echo 'Building project with Maven..'
-                sh "pwd"
+                sh "mvn -v"
                 sh "mvn clean install -f ${PROJECT_DIR}/pom.xml"
             }
         }
