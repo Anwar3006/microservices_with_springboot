@@ -6,9 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class AppUser {
     
     @Id
@@ -16,7 +18,7 @@ public class AppUser {
     @Column(name="USER_ID")
     private Long id;
     
-    private final String alias;
+    private String alias;
 
     public AppUser(String alias) {
         this.alias = alias;

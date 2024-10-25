@@ -26,6 +26,4 @@ public class MultiplicationServiceImpl implements MultiplicationService{
         
         return attempt.getResult() == attempt.getMultiplication().getFactorA() * attempt.getMultiplication().getFactorB();
     }
-
-    
 }

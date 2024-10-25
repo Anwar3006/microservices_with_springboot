@@ -10,6 +10,7 @@ import microservices.book.multiplication_app.domain.Multiplication;
 import microservices.book.multiplication_app.service.MultiplicationService;
 
 
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/multiplications")
@@ -20,6 +21,11 @@ public class MultiplicationController {
     @GetMapping("/random")
     public ResponseEntity<Multiplication> getMultiplication() {
         return ResponseEntity.ok(multiplicationService.generateMultiplication());
+    }
+    
+    @GetMapping("/result")
+    public ResponseEntity<Boolean> getAttemptResult() {
+        return ResponseEntity.ok(false);
     }
     
 }

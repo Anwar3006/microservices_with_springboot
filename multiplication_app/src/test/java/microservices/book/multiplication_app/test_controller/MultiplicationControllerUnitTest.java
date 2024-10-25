@@ -62,4 +62,5 @@ public class MultiplicationControllerUnitTest {
        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
        assertThat(response.getContentAsString()).isEqualTo(jsonMultiplication.write(multiplication).getJson());   
    }
+
 }
