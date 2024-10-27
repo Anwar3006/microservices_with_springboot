@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
  * @author anwa
  */
 
-@Data
+
 @Entity
 @NoArgsConstructor
 public class Multiplication {
@@ -32,7 +31,45 @@ public class Multiplication {
         this.factorB = factorB;
     }
 
+    
+
     public int getResult(){
         return this.factorA * this.factorB;
+    }
+
+
+
+    public Long getId() {
+        return Id;
+    }
+
+
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
+
+
+    public int getFactorA() {
+        return factorA;
+    }
+
+
+
+    public void setFactorA(int factorA) {
+        this.factorA = factorA;
+    }
+
+
+
+    public int getFactorB() {
+        return factorB;
+    }
+
+
+
+    public void setFactorB(int factorB) {
+        this.factorB = factorB;
     }
 }

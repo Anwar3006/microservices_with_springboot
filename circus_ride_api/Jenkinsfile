@@ -1,0 +1,38 @@
+pipeline{
+    agents any
+
+    environment {
+        PROJECT_DIR = "circus_ride_api"
+    }
+
+    stage('Checkout') {
+        steps {
+            git branch: 'main', 
+            url: 'https://github.com/Anwar3006/microservices_with_springboot.git'
+        }
+    }
+
+    triggers{
+        pollSCM('* * * * *')
+    }
+
+    stages{
+        stage('Build'){
+            steps{
+                sh '''
+                    echo "Hello World"
+                    echo "We are building the project"
+                '''
+            }
+        }
+
+        stage('Test'){
+            steps{
+                sh '''
+                    echo "Bye World"
+                    echo "We are testing the project"
+                '''
+            }
+        }
+    }
+}

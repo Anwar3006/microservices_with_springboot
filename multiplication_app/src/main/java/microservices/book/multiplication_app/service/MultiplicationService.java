@@ -1,5 +1,6 @@
 package microservices.book.multiplication_app.service;
 
+
 import microservices.book.multiplication_app.domain.Multiplication;
 import microservices.book.multiplication_app.domain.MultiplicationAttemptResult;
 import microservices.book.multiplication_app.helper.RandomFactorGenerator;

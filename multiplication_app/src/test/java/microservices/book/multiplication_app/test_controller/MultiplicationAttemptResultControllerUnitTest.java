@@ -75,7 +75,6 @@ public class MultiplicationAttemptResultControllerUnitTest {
                                                     .contentType(MediaType.APPLICATION_JSON)
                                                     .content(requestJson.write(attempt).getJson()))
                                                   .andReturn().getResponse();
-    System.out.println("isCorrect=>>>>>"+isCorrect);
     //then
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString()).isEqualTo(String.valueOf(isCorrect));

@@ -23,7 +23,8 @@ public class MultiplicationServiceImpl implements MultiplicationService{
 
     @Override
     public boolean checkAttempt(final MultiplicationAttemptResult attempt) {
-        
-        return attempt.getResult() == attempt.getMultiplication().getFactorA() * attempt.getMultiplication().getFactorB();
+        System.out.println("Checking attempt: " + attempt.toString());
+        boolean correct = attempt.getResult() == attempt.getMultiplication().getFactorA() * attempt.getMultiplication().getFactorB();
+        return correct;
     }
 }

@@ -1,22 +1,23 @@
 package microservices.book.multiplication_app.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
 import microservices.book.multiplication_app.domain.Multiplication;
 import microservices.book.multiplication_app.service.MultiplicationService;
 
 
 
-@RequiredArgsConstructor
+
 @RestController
 @RequestMapping("/multiplications")
 public class MultiplicationController {
 
-    private final MultiplicationService multiplicationService;
+    @Autowired
+    private MultiplicationService multiplicationService;
     
     @GetMapping("/random")
     public ResponseEntity<Multiplication> getMultiplication() {
