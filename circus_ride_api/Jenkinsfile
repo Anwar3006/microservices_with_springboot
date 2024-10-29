@@ -11,10 +11,17 @@ pipeline{
 
     stages{
         stage('Build'){
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    reuseNode true
+                }
+            }
+
             steps{
                 sh '''
-                    echo "Hello World"
-                    echo "We are building the project"
+                    mvn -v
+                    mvn -f $PROJECT_DIR/pom.xml clean install
                 '''
             }
         }
