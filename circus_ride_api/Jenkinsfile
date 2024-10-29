@@ -22,7 +22,7 @@ pipeline{
                 sh '''
                     mvn -v
                     java -version
-                    mvn -f $PROJECT_DIR/pom.xml clean package 
+                    mvn -f $PROJECT_DIR/pom.xml clean package
                 '''
             }
         }
