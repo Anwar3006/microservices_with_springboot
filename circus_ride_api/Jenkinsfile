@@ -21,6 +21,7 @@ pipeline{
             steps{
                 sh '''
                     mvn -v
+                    java -version
                     mvn -f $PROJECT_DIR/pom.xml clean package -Dmaven.repo.local=$WORKSPACE/.m2/repository
                 '''
             }
