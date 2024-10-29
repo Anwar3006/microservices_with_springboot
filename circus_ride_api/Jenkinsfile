@@ -11,12 +11,12 @@ pipeline{
 
     stages{
         stage('Build'){
-            agent {
-                docker {
-                    image 'maven:ibmjava'
-                    reuseNode true
-                }
-            }
+            // agent {
+            //     docker {
+            //         image 'maven:ibmjava'
+            //         reuseNode true
+            //     }
+            // }
 
             steps{
                 sh '''
