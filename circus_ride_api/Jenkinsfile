@@ -1,15 +1,8 @@
 pipeline{
-    agents any
+    agent any
 
     environment {
         PROJECT_DIR = "circus_ride_api"
-    }
-
-    stage('Checkout') {
-        steps {
-            git branch: 'main', 
-            url: 'https://github.com/Anwar3006/microservices_with_springboot.git'
-        }
     }
 
     triggers{
