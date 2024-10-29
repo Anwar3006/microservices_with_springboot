@@ -21,7 +21,7 @@ pipeline{
             steps{
                 sh '''
                     mvn -v
-                    mvn -f $PROJECT_DIR/pom.xml clean install
+                    mvn -f $PROJECT_DIR/pom.xml clean install -Dmaven.repo.local=$WORKSPACE/.m2/repository
                 '''
             }
         }
