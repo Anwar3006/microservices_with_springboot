@@ -33,9 +33,12 @@ public class MultiplicationAttempt {
 
     private Integer result;
 
-    public MultiplicationAttempt(Multiplication multiplication, AppUser user, Integer result) {
+    private boolean correct;
+
+    public MultiplicationAttempt(Multiplication multiplication, AppUser user, Integer result, boolean correct) {
         this.multiplication = multiplication;
         this.user = user;
         this.result = result;
+        this.correct = correct;
     }
 }

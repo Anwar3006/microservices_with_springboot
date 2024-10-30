@@ -54,7 +54,7 @@ public class MultiplicationAttemptControllerUnitTest {
         //given
         Multiplication multiplication = new Multiplication(20, 45);
         AppUser user = new AppUser("john_snow");
-        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 900);
+        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 900, false);
         given(multiplicationService.checkAttempt(any(MultiplicationAttempt.class))).willReturn(false);
 
         //when
@@ -65,7 +65,7 @@ public class MultiplicationAttemptControllerUnitTest {
                                                 .getResponse();
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(jsonResponse.write(new MultiplicationAttemptController.AttemptResponseBody(true)).getJson());
+        assertThat(response.getContentAsString()).isEqualTo(jsonResponse.write(new MultiplicationAttemptController.AttemptResponseBody(false)).getJson());
     }
 
 }

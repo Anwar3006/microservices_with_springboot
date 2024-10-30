@@ -16,7 +16,7 @@ import microservices_book.social_multiplication.service.MultiplicationService;
 @RequestMapping("/results")
 public class MultiplicationAttemptController {
     
-    private MultiplicationService multiplicationService;
+    private final MultiplicationService multiplicationService;
 
     public MultiplicationAttemptController(MultiplicationService multiplicationService) {
         this.multiplicationService = multiplicationService;

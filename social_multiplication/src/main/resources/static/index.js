@@ -32,7 +32,7 @@ function postAttempt(requestBody) {
           );
     },
     error: function (xhr, status, error) {
-      //   console.error("Error:", status, error);
+      console.error("Error:", status, error);
       console.error("Response:", xhr.responseText);
     },
   });
