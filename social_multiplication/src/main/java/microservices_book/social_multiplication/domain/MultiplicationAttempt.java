@@ -31,11 +31,11 @@ public class MultiplicationAttempt {
     @JoinColumn(name="USER_ID")
     private AppUser user;
 
-    private boolean correct;
+    private Integer result;
 
-    public MultiplicationAttempt(Multiplication multiplication, AppUser user, boolean correct) {
+    public MultiplicationAttempt(Multiplication multiplication, AppUser user, Integer result) {
         this.multiplication = multiplication;
         this.user = user;
-        this.correct = correct;
+        this.result = result;
     }
 }

@@ -15,16 +15,16 @@ public class MultiplicationServiceImpl implements MultiplicationService{
     
     @Override
     public Multiplication generateMultiplication() {
-        Integer factorA = randomFactorGenerator.generateRandomFactor();
-        Integer factorB = randomFactorGenerator.generateRandomFactor();
+        Integer num1 = randomFactorGenerator.generateRandomFactor();
+        Integer num2 = randomFactorGenerator.generateRandomFactor();
 
-        return new Multiplication(factorA, factorB);
+        return new Multiplication(num1, num2);
     }
 
     @Override
-    public boolean checkAttempt(MultiplicationAttempt attempt) {
-        // TODO Auto-generated method stub
-        return attempt.isCorrect();
+    public boolean checkAttempt(final MultiplicationAttempt attempt) {
+        System.out.println("Checked Attempt: " + attempt.getMultiplication().getResult() + "--" + attempt.getResult());
+        return attempt.getResult() == attempt.getMultiplication().getResult();
     }
     
 }

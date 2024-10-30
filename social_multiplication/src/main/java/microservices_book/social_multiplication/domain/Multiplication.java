@@ -30,6 +30,6 @@ public class Multiplication {
     }
 
     public int getResult(){
-        return this.getFactorA() * this.getFactorB();
+        return this.factorA * this.factorB;
     }
 }

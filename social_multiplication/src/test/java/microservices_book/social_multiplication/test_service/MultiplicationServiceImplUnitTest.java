@@ -53,24 +53,29 @@ public class MultiplicationServiceImplUnitTest {
 
     @Test
     public void checkWrongAttempt() throws Exception{
-        parameterizedAttemptChecker(false);
-    }
-
-    @Test
-    public void checkRightAttempt() throws Exception{
-        parameterizedAttemptChecker(true);
-    }
-
-    public void parameterizedAttemptChecker(boolean correct) throws Exception{
         //given
         Multiplication multiplication = new Multiplication(20, 45);
         AppUser user = new AppUser("john_snow");
-        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, correct);
+        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 901);
 
         //when
         boolean result = multiplicationService.checkAttempt(attempt);
 
         //then
-        assertThat(result).isEqualTo(correct);
+        assertThat(result).isEqualTo(false);
+    }
+
+    @Test
+    public void checkRightAttempt() throws Exception{
+        //given
+        Multiplication multiplication = new Multiplication(20, 45);
+        AppUser user = new AppUser("john_snow");
+        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 900);
+
+        //when
+        boolean result = multiplicationService.checkAttempt(attempt);
+
+        //then
+        assertThat(result).isEqualTo(true);
     }
 }
