@@ -25,15 +25,40 @@ function postAttempt(requestBody) {
     success: function (data) {
       data.correct
         ? $("#question-card").addClass(
-            "bg-green-400 border-b md:border-b-0 md:border-r rounded-tl-lg rounded-bl-lg"
+            "bg-green-400 border-b md:border-b-0 md:border-r rounded-tl-lg rounded-tr-lg md:rounded-bl-lg"
           )
         : $("#question-card").addClass(
-            "bg-red-400 border-b md:border-b-0 md:border-r rounded-tl-lg rounded-bl-lg"
+            "bg-red-400 border-b md:border-b-0 md:border-r rounded-tl-lg rounded-tr-lg md:rounded-bl-lg"
           );
     },
     error: function (xhr, status, error) {
       console.error("Error:", status, error);
       console.error("Response:", xhr.responseText);
+    },
+  });
+
+  getHistory(requestBody.user.alias);
+}
+
+function getHistory(alias) {
+  $.ajax({
+    url: `/results?alias=${alias}`,
+    type: "GET",
+    success: function (data) {
+      $("#tbody").empty();
+
+      data.forEach((i) => {
+        $("#tbody").append(`
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white rounded-bl-lg">
+              ${data && i.multiplication.factorA} X 
+              ${data && i.multiplication.factorB}
+            </th>
+            <td class="px-6 py-4">${data && i.result}</td>
+            <td class="px-6 py-4">${data && i.correct}</td>
+          </tr>
+          `);
+      });
     },
   });
 }

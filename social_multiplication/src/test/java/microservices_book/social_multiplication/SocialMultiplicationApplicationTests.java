@@ -52,4 +52,13 @@ class SocialMultiplicationApplicationTests {
 						.content(attemptJson.write(attempt).getJson()))
 		   .andExpect(MockMvcResultMatchers.status().isOk());
 	}
+
+	@Test
+	public void getHistoryIntTest() throws Exception{
+		mvc.perform(get("/results?alias=bob")
+						.accept(MediaType.APPLICATION_JSON)
+						.contentType(MediaType.APPLICATION_JSON)
+					)
+		   .andExpect(MockMvcResultMatchers.status().isOk());
+	}
 }
