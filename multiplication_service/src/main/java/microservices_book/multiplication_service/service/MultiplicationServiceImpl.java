@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import microservices_book.multiplication_service.domain.AppUser;
 import microservices_book.multiplication_service.domain.Multiplication;
 import microservices_book.multiplication_service.domain.MultiplicationAttempt;
+import microservices_book.multiplication_service.domain.MultiplicationSolvedEvent;
+import microservices_book.multiplication_service.event.EventDispatcher;
 import microservices_book.multiplication_service.repository.AppUserRepository;
 import microservices_book.multiplication_service.repository.MultiplicationAttemptRepository;
 import microservices_book.multiplication_service.utils.RandomFactorGenerator;
@@ -19,12 +21,14 @@ public class MultiplicationServiceImpl implements MultiplicationService{
     private final RandomFactorGenerator randomFactorGenerator;
     private final AppUserRepository userRepository;
     private final MultiplicationAttemptRepository attemptRepository;
+    private final EventDispatcher eventDispatcher;
     
     public MultiplicationServiceImpl(RandomFactorGenerator randomFactorGenerator, AppUserRepository userRepository,
-            MultiplicationAttemptRepository attemptRepository) {
+            MultiplicationAttemptRepository attemptRepository, final EventDispatcher eventDispatcher) {
         this.randomFactorGenerator = randomFactorGenerator;
         this.userRepository = userRepository;
         this.attemptRepository = attemptRepository;
+        this.eventDispatcher = eventDispatcher;
     }
 
     @Override
@@ -52,6 +56,11 @@ public class MultiplicationServiceImpl implements MultiplicationService{
                                                                         isCorrect);
         //save the attempt
         attemptRepository.save(attemptToSave);
+
+        //communicate the result via Event
+        eventDispatcher.send(new MultiplicationSolvedEvent(attemptToSave.getId(), 
+                                                            attemptToSave.getUser().getId(),
+                                                            attemptToSave.isCorrect()));
         return isCorrect;
     }
     
