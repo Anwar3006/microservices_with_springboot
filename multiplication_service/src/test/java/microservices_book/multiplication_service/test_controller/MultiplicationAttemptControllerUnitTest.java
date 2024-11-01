@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 
-package microservices_book.social_multiplication.test_controller;
+package microservices_book.multiplication_service.test_controller;
 
 import java.util.List;
 
@@ -26,12 +26,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import microservices_book.social_multiplication.controller.MultiplicationAttemptController;
-import microservices_book.social_multiplication.domain.AppUser;
-import microservices_book.social_multiplication.domain.Multiplication;
-import microservices_book.social_multiplication.domain.MultiplicationAttempt;
-import microservices_book.social_multiplication.service.MultiplicationAttemptService;
-import microservices_book.social_multiplication.service.MultiplicationService;
+import microservices_book.multiplication_service.controller.MultiplicationAttemptController;
+import microservices_book.multiplication_service.domain.AppUser;
+import microservices_book.multiplication_service.domain.Multiplication;
+import microservices_book.multiplication_service.domain.MultiplicationAttempt;
+import microservices_book.multiplication_service.service.MultiplicationAttemptService;
+import microservices_book.multiplication_service.service.MultiplicationService;
  
 /**
  *
