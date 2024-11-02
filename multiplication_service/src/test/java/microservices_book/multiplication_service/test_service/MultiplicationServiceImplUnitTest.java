@@ -20,6 +20,8 @@ import org.mockito.MockitoAnnotations;
 import microservices_book.multiplication_service.domain.AppUser;
 import microservices_book.multiplication_service.domain.Multiplication;
 import microservices_book.multiplication_service.domain.MultiplicationAttempt;
+import microservices_book.multiplication_service.domain.MultiplicationSolvedEvent;
+import microservices_book.multiplication_service.event.EventDispatcher;
 import microservices_book.multiplication_service.repository.AppUserRepository;
 import microservices_book.multiplication_service.repository.MultiplicationAttemptRepository;
 import microservices_book.multiplication_service.service.MultiplicationServiceImpl;
@@ -42,6 +44,10 @@ public class MultiplicationServiceImplUnitTest {
 
     @Mock
     private RandomFactorGenerator randomFactorGenerator;
+
+    @Mock
+    private EventDispatcher eventDispatcher;
+    
 
     @BeforeEach
     public void setUp(){
@@ -71,12 +77,15 @@ public class MultiplicationServiceImplUnitTest {
         MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 901, false);
         given(userRepository.findUserByAlias("john_snow")).willReturn(Optional.empty());
 
+        MultiplicationSolvedEvent solvedEvent = new MultiplicationSolvedEvent(attempt.getId(), attempt.getUser().getId(), attempt.isCorrect());
+
         //when
         boolean result = multiplicationService.checkAttempt(attempt);
 
         //then
         assertThat(result).isEqualTo(false);
         verify(attemptRepository).save(any(MultiplicationAttempt.class));
+        verify(eventDispatcher).send(solvedEvent);
     }
 
     @Test
@@ -87,11 +96,14 @@ public class MultiplicationServiceImplUnitTest {
         MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 900, false);
         given(userRepository.findUserByAlias("john_snow")).willReturn(Optional.empty());
 
+        MultiplicationSolvedEvent solvedEvent = new MultiplicationSolvedEvent(attempt.getId(), attempt.getUser().getId(), attempt.isCorrect());
+
         //when
         boolean result = multiplicationService.checkAttempt(attempt);
 
         //then
         assertThat(result).isEqualTo(true);
         verify(attemptRepository).save(any(MultiplicationAttempt.class));
+        verify(eventDispatcher).send(solvedEvent);
     }
 }
