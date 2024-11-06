@@ -11,4 +11,11 @@ public interface MultiplicationAttemptService {
      * @return List of {@link MultiplicationAttempt}
      */
     List<MultiplicationAttempt> getAttemptsHistory(final String alias);
+
+    /**
+     * Get a (@link MultiplicationAttempt}
+     * @param attemptId
+     * @return {@link MultiplicationAttempt}
+     */
+    MultiplicationAttempt getAttemptById(final Long attemptId);
 }

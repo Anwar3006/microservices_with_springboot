@@ -21,5 +21,10 @@ public class MultiplicationAttemptServiceImpl implements MultiplicationAttemptSe
     public List<MultiplicationAttempt> getAttemptsHistory(String alias) {
         return attemptRepository.findByUserAliasOrderByIdDesc(alias);
     }
+
+    @Override
+    public MultiplicationAttempt getAttemptById(Long attemptId) {
+        return attemptRepository.findById(attemptId).get();
+    }
     
 }
