@@ -21,6 +21,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.mockito.MockitoAnnotations;
 
+import microservices_book.gamification_service.client.MultiplicationClientService;
 import microservices_book.gamification_service.domain.BadgeCard;
 import microservices_book.gamification_service.domain.Badge_Enum;
 import microservices_book.gamification_service.domain.GameStats;
@@ -43,6 +44,9 @@ public class GameServiceImplUnitTest {
 
     @Mock
     private BadgeCardRepository badgeCardRepository;
+
+    @Mock
+    private MultiplicationClientService attemptClientService;
 
     private final Long userId = 1L;
     private final Long attemptId = 122L;

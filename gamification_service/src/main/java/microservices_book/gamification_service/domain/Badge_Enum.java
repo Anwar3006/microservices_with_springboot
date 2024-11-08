@@ -11,5 +11,6 @@ public enum Badge_Enum {
 
     //Other awardable badges
     FIRST_ATTEMPT,
-    FIRST_WON
+    FIRST_WON,
+    LUCKY_NUMBER
 }
