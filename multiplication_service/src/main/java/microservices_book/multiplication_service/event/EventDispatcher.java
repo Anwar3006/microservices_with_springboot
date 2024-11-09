@@ -27,6 +27,7 @@ public class EventDispatcher {
 
     public void send(final MultiplicationSolvedEvent solvedEvent){
         rabbitTemplate.convertAndSend(multiplicationExchange, multiplicationSolvedRoutingKey, solvedEvent);
+        System.out.println("Sending event: " + solvedEvent.toString());
     }
     
 }

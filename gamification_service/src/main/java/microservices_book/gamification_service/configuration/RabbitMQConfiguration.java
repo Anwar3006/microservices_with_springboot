@@ -26,7 +26,7 @@ public class RabbitMQConfiguration implements RabbitListenerConfigurer {
 
     @Bean
     public Queue multiplicationQueue(@Value("${multiplication.queue}") final String queueName){
-        return new Queue(queueName, false);
+        return new Queue(queueName, true);
     }
 
     @Bean
