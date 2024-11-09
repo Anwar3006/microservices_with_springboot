@@ -45,7 +45,7 @@ public class MultiplicationAttemptController {
         return ResponseEntity.ok(history);
     }
     
-    @GetMapping
+    @GetMapping("/{attemptId}")
     public ResponseEntity<MultiplicationAttempt> getAttemptById(@PathVariable Long attemptId) {
         MultiplicationAttempt attempt = attemptService.getAttemptById(attemptId);
         return ResponseEntity.ok(attempt);

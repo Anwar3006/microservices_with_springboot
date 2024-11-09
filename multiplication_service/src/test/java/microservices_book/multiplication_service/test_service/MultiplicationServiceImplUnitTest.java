@@ -93,10 +93,10 @@ public class MultiplicationServiceImplUnitTest {
         //given
         Multiplication multiplication = new Multiplication(20, 45);
         AppUser user = new AppUser("john_snow");
-        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 900, false);
         given(userRepository.findUserByAlias("john_snow")).willReturn(Optional.empty());
-
-        MultiplicationSolvedEvent solvedEvent = new MultiplicationSolvedEvent(attempt.getId(), attempt.getUser().getId(), attempt.isCorrect());
+        
+        MultiplicationAttempt attempt = new MultiplicationAttempt(multiplication, user, 900, false);
+        MultiplicationSolvedEvent solvedEvent = new MultiplicationSolvedEvent(attempt.getId(), attempt.getUser().getId(), attempt.getResult() == attempt.getMultiplication().getResult());
 
         //when
         boolean result = multiplicationService.checkAttempt(attempt);
