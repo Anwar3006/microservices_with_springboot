@@ -1,10 +1,13 @@
 package microservices_book.gamification_service.client;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import microservices_book.gamification_service.client.dto.MultiplicationAttempt;
 
+
+@Component
 public class MultiplicationClientServiceImpl implements MultiplicationClientService{
 
     private final RestTemplate restTemplate;

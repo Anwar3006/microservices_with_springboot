@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.assertj.core.util.Lists;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
@@ -21,7 +22,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.mockito.MockitoAnnotations;
 
+
 import microservices_book.gamification_service.client.MultiplicationClientService;
+import microservices_book.gamification_service.client.dto.MultiplicationAttempt;
 import microservices_book.gamification_service.domain.BadgeCard;
 import microservices_book.gamification_service.domain.Badge_Enum;
 import microservices_book.gamification_service.domain.GameStats;
@@ -34,6 +37,7 @@ import microservices_book.gamification_service.service.GameServiceImpl;
  *
  * @author anwa
  */
+// @ExtendWith(MockitoExtension.class)
 public class GameServiceImplUnitTest {
 
     @InjectMocks
@@ -62,6 +66,8 @@ public class GameServiceImplUnitTest {
         //given
         given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(150);
         given(badgeCardRepository.findByUserIdOrderByBadgeTimestampDesc(userId)).willReturn(new ArrayList<>());
+        MultiplicationAttempt attempt = new MultiplicationAttempt("john_snow", 20, 40, 800, true);
+        given(attemptClientService.getAttemptById(attemptId)).willReturn(attempt);
 
         //when
         GameStats newStats = gameService.processNewAttempt(userId, attemptId, true);
@@ -78,6 +84,8 @@ public class GameServiceImplUnitTest {
         //given
         given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(150);
         given(badgeCardRepository.findByUserIdOrderByBadgeTimestampDesc(userId)).willReturn(new ArrayList<>());
+        MultiplicationAttempt attempt = new MultiplicationAttempt("john_snow", 20, 40, 810, false);
+        given(attemptClientService.getAttemptById(attemptId)).willReturn(attempt);
 
         //when
         GameStats getStats = gameService.processNewAttempt(userId, attemptId, false);
@@ -92,16 +100,16 @@ public class GameServiceImplUnitTest {
     @Test
     public void getStatsForUserTest() throws Exception{
         //given
-        List<BadgeCard> badges =  Lists.list(new BadgeCard(userId, Badge_Enum.FIRST_WON), 
+        List<BadgeCard> badges =  List.of(new BadgeCard(userId, Badge_Enum.FIRST_WON), 
                                             new BadgeCard(userId,Badge_Enum.BRONZE_MULTIPLICATOR));
+        given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(200);
         given(badgeCardRepository.findByUserIdOrderByBadgeTimestampDesc(userId)).willReturn(badges);
 
         //when - request stats for existing user(getStats) VS non-existing user(getStats_2)
         GameStats getStats = gameService.getStatsForUser(userId);
-        GameStats getStats_2 = gameService.getStatsForUser(2L);
-
+        System.out.println(getStats.getBadges());
         //then
-        assertThat(getStats.getBadges().contains(Badge_Enum.FIRST_WON));
-        assertThat(getStats_2.getUserId()).isEqualTo(2);
+        assertThat(getStats.getScore()).isEqualTo(200);
+        assertThat(getStats.getBadges()).containsExactlyInAnyOrder(Badge_Enum.FIRST_WON, Badge_Enum.BRONZE_MULTIPLICATOR);
     }
 }

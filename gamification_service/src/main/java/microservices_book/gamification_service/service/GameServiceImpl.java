@@ -85,7 +85,7 @@ public class GameServiceImpl implements GameService{
 
         //conditional to check for LUCKY_number(42)
         MultiplicationAttempt getAttempt = attemptClientService.getAttemptById(attemptId);
-        if(!containsBadge(badgeCardsList, Badge_Enum.LUCKY_NUMBER) && getAttempt.getMultiplicationFactorA() == 42 || getAttempt.getMultiplicationFactorB() == 42){
+        if(!containsBadge(badgeCardsList, Badge_Enum.LUCKY_NUMBER) && getAttempt.getMultiplicationFactorA() == LUCKY_NUMBER || getAttempt.getMultiplicationFactorB() == LUCKY_NUMBER){
             BadgeCard luckyNumberWon = giveBadgeToUser(userId, Badge_Enum.LUCKY_NUMBER);
             badgeCards.add(luckyNumberWon);
         }
