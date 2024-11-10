@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Multiplication</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Jquery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body class="bg-gray-500">
+    <div class="flex flex-col items-center justify-center h-screen w-full">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 bg-neutral-300 shadow-lg rounded-lg w-1/2 h-[360px] md:h-[260px] mb-5"
+      >
+        <div
+          class="flex items-center justify-center border-b h-[100px] md:h-[260px] md:border-b-0 md:border-r border-gray-400"
+          id="question-card"
+        >
+          <p class="mb-3 text-2xl">
+            <span id="factorA" class="font-bold text-4xl"></span> X
+            <span id="factorB" class="font-bold text-4xl"></span>
+          </p>
+        </div>
+
+        <div class="pt-5 mb-5">
+          <form
+            id="attempt-form"
+            class="flex flex-col items-center justify-center"
+          >
+            <div class="px-3">
+              <label
+                for="alias"
+                class="block mb-1 text-sm font-medium text-black text-center underline italic"
+                >Username(Alias)</label
+              >
+              <input
+                type="text"
+                id="alias"
+                class="bg-white border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-center"
+                placeholder="John"
+                required
+              />
+            </div>
+            <div class="px-3 mt-5">
+              <label
+                for="attempt"
+                class="block mb-1 text-sm font-medium text-black text-center underline italic"
+                >Solution</label
+              >
+              <input
+                type="text"
+                id="attempt"
+                class="bg-white border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-center"
+                placeholder="40"
+                required
+              />
+            </div>
+
+            <div
+              class="flex items-center justify-center bg-blue-400 w-2/3 py-1 px-3 rounded-md mt-3"
+            >
+              <input
+                type="submit"
+                value="Submit"
+                id="submit"
+                class="text-2xl font-bold text-blue-800"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="h-[210px] overflow-y-scroll">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr id="thead-tr">
+              <th scope="col" class="px-6 py-3 rounded-tl-lg">
+                Multiplication
+              </th>
+              <th scope="col" class="px-6 py-3">Result</th>
+              <th scope="col" class="px-6 py-3 rounded-tr-lg">isCorrect</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
