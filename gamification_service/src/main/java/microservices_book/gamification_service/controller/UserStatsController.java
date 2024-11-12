@@ -1,8 +1,8 @@
 package microservices_book.gamification_service.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import microservices_book.gamification_service.domain.GameStats;
@@ -19,8 +19,8 @@ public class UserStatsController {
     }
 
 
-    @GetMapping
-    public GameStats gameStatsForUser(@RequestParam("userId") final Long userId){
+    @GetMapping("/{userId}")
+    public GameStats gameStatsForUser(@PathVariable final Long userId){
         return gameService.getStatsForUser(userId);
     }
 }

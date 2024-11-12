@@ -16,10 +16,40 @@
   </head>
 
   <body class="bg-gray-500">
+    <!-- LeaderBoard -->
+    <div class="flex flex-col items-start fixed h-screen bg-[#0D9488]" id="leaderBoard">
+      <h1 class="text-xl text-white px-2 py-3 font-extrabold underline italic self-center">LeaderBoard</h1>
+      <div class="self-center" id="refresh-board">
+        <button type="button" class="text-white bg-gradient-to-r from-green-600 via-teal-600 to-teal-900 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Refresh Board</button>
+      </div>
+      <div
+  class="relative flex flex-col w-full h-full overflow-scroll text-gray-700">
+  <table class="w-full text-left table-auto min-w-max">
+    <thead>
+      <tr>
+        <th class="p-4 border-b border-blue-gray-100 bg-teal-700">
+          <p class="block font-sans text-base antialiased font-normal leading-none text-white">
+            User IDs
+          </p>
+        </th>
+        <th class="p-4 border-b border-blue-gray-100 bg-teal-700">
+          <p class="block font-sans text-base antialiased font-normal leading-none text-white">
+            Score
+          </p>
+        </th>
+      </tr>
+    </thead>
+    <tbody id="leaderBoard-body"></tbody>
+  </table>
+</div>
+    </div>
+
+    <!-- Main Game Body -->
     <div class="flex flex-col items-center justify-center h-screen w-full">
       <div
         class="grid grid-cols-1 md:grid-cols-2 bg-neutral-300 shadow-lg rounded-lg w-1/2 h-[360px] md:h-[260px] mb-5"
       >
+        <!-- Displays Multiplication Questions -->
         <div
           class="flex items-center justify-center border-b h-[100px] md:h-[260px] md:border-b-0 md:border-r border-gray-400"
           id="question-card"
@@ -30,6 +60,7 @@
           </p>
         </div>
 
+        <!-- Displays Form to enter attempt -->
         <div class="pt-5 mb-5">
           <form
             id="attempt-form"
@@ -78,26 +109,54 @@
         </div>
       </div>
 
-      <div class="h-[210px] overflow-y-scroll">
-        <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      <div class="flex items-center justify-between space-x-8">
+         
+        <!-- Displays Attempt History in Tabular form -->
+         <div class="h-[210px] overflow-y-scroll" id="attemptHistory-table">
+           <table
+             class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4"
+           >
+             <thead
+               class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+             >
+               <tr id="thead-tr">
+                 <th scope="col" class="px-6 py-3 rounded-tl-lg">
+                   Multiplication
+                 </th>
+                 <th scope="col" class="px-6 py-3">Result</th>
+                 <th scope="col" class="px-6 py-3 rounded-tr-lg">isCorrect</th>
+               </tr>
+             </thead>
+             <tbody id="tbody"></tbody>
+           </table>
+         </div>
+
+         <!-- Displays User Stats in Tabular form -->
+        <div class="h-[210px] overflow-y-scroll" id="userStats-table" >
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4"
           >
-            <tr id="thead-tr">
-              <th scope="col" class="px-6 py-3 rounded-tl-lg">
-                Multiplication
-              </th>
-              <th scope="col" class="px-6 py-3">Result</th>
-              <th scope="col" class="px-6 py-3 rounded-tr-lg">isCorrect</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-zinc-800 dark:text-gray-400"
+            >
+              <tr id="thead-tr">
+                <th scope="col" class="px-6 py-3 rounded-tl-lg">
+                  Your User_ID 
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Total Score
+                </th>
+                <th scope="col" class="px-6 py-3 rounded-tr-lg">Badges</th>
+              </tr>
+            </thead>
+            <tbody id="userStats-body"></tbody>
+          </table>
+        </div>
+
+       </div>
     </div>
 
-    <script src="./index.js"></script>
+    <script src="./multiplication-client.js"></script>
+    <script src="./gamification-client.js"></script>
   </body>
 </html>

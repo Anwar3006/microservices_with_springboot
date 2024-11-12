@@ -17,7 +17,7 @@ function getAndDisplayMultiplication() {
 
 function postAttempt(requestBody) {
   $.ajax({
-    url: "/results",
+    url: "http://localhost:8080/results",
     type: "POST",
     data: JSON.stringify(requestBody),
     contentType: "application/json; charset=utf-8",
@@ -38,13 +38,17 @@ function postAttempt(requestBody) {
   });
 
   getHistory(requestBody.user.alias);
+  $("#leaderBoard").show(); 
 }
 
 function getHistory(alias) {
+  var userId = -1;
   $.ajax({
-    url: `/results?alias=${alias}`,
+    async: false,
+    url: `http://localhost:8080/results?alias=${alias}`,
     type: "GET",
     success: function (data) {
+      $("#attemptHistory-table").show();
       $("#tbody").empty();
 
       data.forEach((i) => {
@@ -59,12 +63,19 @@ function getHistory(alias) {
           </tr>
           `);
       });
+      userId = data[0].user.id;
     },
   });
+  return userId;
 }
+
+
 
 $(document).ready(function () {
   getAndDisplayMultiplication();
+
+  // Hide the Attempt History table
+  $("#attemptHistory-table").hide();
 
   $("#attempt-form").submit(function (e) {
     e.preventDefault();
@@ -85,5 +96,11 @@ $(document).ready(function () {
     postAttempt(requestBody);
 
     getAndDisplayMultiplication();
+
+    setTimeout(function(){
+      var userId = getHistory(alias);
+      updateStats(userId);
+      getLeaderBoard();
+    }, 300);
   });
 });
