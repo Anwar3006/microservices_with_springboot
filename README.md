@@ -43,7 +43,7 @@
 ### Solutions to the above
 
 - Service Registry & Discovery
-  - We can employ services like `Netflix's Eureka`, `Consul` or `Kubernetes' built-in Service Discovery`. What this will do is that when we spin up more instances of services or decrease them to adjust for load, these instances will be registered for the UI to automatically discover.
+  - We can employ services like `Netflix's Eureka`, `Consul` or `Kubernetes' built-in Service Discovery`. What this will do is that when we spin up more instances of services or decrease them to adjust for load, these instances will be registered for other microservices to automatically discover. Service Discovery is for Backend(service-to-service) communication so this cannot be employed for our frontend-backend communication
 - Load Balancing
   - A central point for receiving requests and routing them to their appropriate service instance.
 - API Gateway
@@ -55,11 +55,11 @@
 
 - **Service Registry**: Responsible for registering Services and keep track of them using thier alias.
 - **Register Agent**: Is used by the services to define it's configurations so they can be found.
-- **Service Discovery Client**: Contacts the registry for registered services using their alias.
+- **Register Client**: Contacts the registry for registered services using their alias.
 ![Architecture with Service Discovery](IMG_0203.jpg)
 
 - We will deploy this `Service Registry` as a separate mircoservice. The Multiplication and Gamification services will contact this Service Registry as soon as they start to register themselves using their `Register Agent`. 
-- After that they receive a alias(which is usually the microservice's name, eg: <http://multiplication/>, <http://gamification/>) that can be used to identify them within the registry. The services have a `Service Client/Registry Client` which will take the alias and use it to ask for the url of the registered service inside the `Service Registry`. Basically, the `Service Registry` is like a DNS that keeps registered services and their urls so that when `Registry Client`s come with an alias, they can be givne the appropriate url for them to use to connect to destination.
+- After that they receive an alias(which is usually the microservice's name, eg: <http://multiplication/>, <http://gamification/>) that can be used to identify them within the registry. The services have a `Register Client` which will take the alias and use it to ask for the url of the registered service inside the `Service Registry`. Basically, the `Service Registry` is like a DNS that keeps registered services and their urls so that when `Registry Client`s come with an alias, they can be given the appropriate url for them to use to connect to their destination service.
 - So Gamification's Registry client will contact the Service Registry with the alias of the Multiplication Service and then get *http:localhost:8080* which will be used by Gamification to contact Multiplication.
 
 #### Client-Side Load Balancing
@@ -71,3 +71,28 @@
   - Then when our Frontend or other Services want to communicate with this service they go to our `Ribbon` who will ask the `Service Registry` for the list of urls that represent his service that we want to talk to.
   - We get a list of urls back and `Ribbon` then decides where to route the request based on the load balancing strategy configured within `Ribbon`.
 ![Architecture with Service Discovery and Client-Side Load Balancing](IMG_96F114E67DBC-1.jpeg)
+
+#### Polygot Systems
+
+- A Polyglot system in MicroService Architecture is basically a system where the services can be written in different languages and still work together seamlessly. We can employ yet another library from the Netflix OSS family called `Spring Cloud Netflix Sidecar`. How does Sidecar work?
+  - Write your service in the language of your choice, say JavaScript, and boot it up. Operates on a different microservice
+  - Start a SpringBoot application that has our `Sidecar` dependency. Operates on a different microservice.
+  - Our non-Java application will have it's own `Registry Client` and `Load Balancer`.
+  - The Sidecar application will act as a proxy and do the communication on other microservices on our behalf. It will also have a `Registry Client` and `Registry Agent` that talks to our Service Registry.
+![Polyglot MicroService Architecture](<Learn Microservices with Spring Boot.jpeg>)
+
+
+#### API Gateways
+
+- Now we have done quite alot but more needs to be done. As at now the Frontend is very aware of our Backend architecture which isnt good, how does the frontend know? Well bacause our frontend is making HTTP requests to APIs being served from from different port numbers suggesting that our backend is split.
+- What we want is to mimic a Monolithic Architecture from the Frontend's POV, meaning that the Frontend has no idea what architectural style our Backend has employed. So instead of making requests to *http://multiplication/*, *http://gamification/*, ..., *http://microserviceName/* we just make a request to one url *http://application/* and our Backend will handle where to route the request based on some url patterns.
+- How can we handle this? We go to Netflix OSS family once more, for the library `Spring Cloud Netflix Zuul` or another called `Spring Cloud Gateway`.
+- In our application we will introduce our `API Gateway` and a `Routing table` via `Zuul`. The Routing table is basically a table that maps the url coming in from the Frontend to an appropriate backend server/service. The API Gateway may be placed in front of several Load Balancer that handle load distribution to our Service instances. As usual, this new Gatway will exist as a microservice.
+![Architecture with API Gateway & Routing Table](IMG_92F50E8F9766-1.jpeg)
+
+#### Eureka, Ribbon and Zuul at work
+
+- `Zuul` gets a request. Zuul checks the request url pattern(eg: /random) which will map onto an alias in the Routing Table.
+- `Eureka` is asked, by Zuul, for the list of services in it's Registry that have the same alias. Eureka returns the list.
+- `Ribbon` takes the list and returns one url based on it's load balancing strategy.
+- `Zuul` takes over and redirects to that location.
