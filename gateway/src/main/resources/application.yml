@@ -1,0 +1,50 @@
+spring:
+    application:
+        name: gateway
+    main:
+        web-application-type: REACTIVE
+
+# Configuring the Spring Cloud Gateway
+    cloud:
+        gateway:
+            routes:
+                - id: multiplications
+                  uri: http://localhost:8080
+                  predicates:
+                    - Path=/api/multiplications/**
+                  filters:
+                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+
+                - id: results
+                  uri: http://localhost:8080
+                  predicates:
+                    - Path=/api/results/**
+                  filters:
+                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+
+                - id: leaders
+                  uri: http://localhost:8081
+                  predicates:
+                    - Path=/api/leaders/**
+                  filters:
+                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+
+                - id: stats
+                  uri: http://localhost:8081
+                  predicates:
+                    - Path=/api/stats/**
+                  filters:
+                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+server:
+  port: 8000

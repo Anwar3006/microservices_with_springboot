@@ -1,6 +1,6 @@
 function getLeaderBoard() {
     $.ajax({
-        url: "http://localhost:8081/leaders"
+        url: SERVER_URL+"/leaders"
     }).then(function (data) {
         $("#leaderBoard-body").empty();
         data.forEach(row => {
@@ -21,7 +21,7 @@ function getLeaderBoard() {
 
 function updateStats(userId){
     $.ajax({
-        url: "http://localhost:8081/stats/"+userId,
+        url: SERVER_URL+"/stats/"+userId,
         success: function(data){
             // Show table if hidden
             $("#userStats-table").show();
@@ -51,10 +51,6 @@ function updateStats(userId){
         }
     })
 }
-
-// function getUserId() {
-//     const $("#alias").val();
-// }
 
 
 $(document).ready(function (){

@@ -1,6 +1,8 @@
+const SERVER_URL = "http://localhost:8000/api";
+
 // onPageLoad, get data from server and display it
 function getAndDisplayMultiplication() {
-  $.ajax({ url: "http://localhost:8080/multiplications/random" })
+  $.ajax({ url: SERVER_URL+"/multiplications/random" })
     .then(function (data) {
       //clean the form
       $("#alias").val("");
@@ -17,7 +19,7 @@ function getAndDisplayMultiplication() {
 
 function postAttempt(requestBody) {
   $.ajax({
-    url: "http://localhost:8080/results",
+    url: SERVER_URL+"/results",
     type: "POST",
     data: JSON.stringify(requestBody),
     contentType: "application/json; charset=utf-8",
@@ -45,7 +47,7 @@ function getHistory(alias) {
   var userId = -1;
   $.ajax({
     async: false,
-    url: `http://localhost:8080/results?alias=${alias}`,
+    url: `${SERVER_URL}/results?alias=${alias}`,
     type: "GET",
     success: function (data) {
       $("#attemptHistory-table").show();

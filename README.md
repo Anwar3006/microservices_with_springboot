@@ -81,11 +81,10 @@
   - The Sidecar application will act as a proxy and do the communication on other microservices on our behalf. It will also have a `Registry Client` and `Registry Agent` that talks to our Service Registry.
 ![Polyglot MicroService Architecture](<Learn Microservices with Spring Boot.jpeg>)
 
-
 #### API Gateways
 
 - Now we have done quite alot but more needs to be done. As at now the Frontend is very aware of our Backend architecture which isnt good, how does the frontend know? Well bacause our frontend is making HTTP requests to APIs being served from from different port numbers suggesting that our backend is split.
-- What we want is to mimic a Monolithic Architecture from the Frontend's POV, meaning that the Frontend has no idea what architectural style our Backend has employed. So instead of making requests to *http://multiplication/*, *http://gamification/*, ..., *http://microserviceName/* we just make a request to one url *http://application/* and our Backend will handle where to route the request based on some url patterns.
+- What we want is to mimic a Monolithic Architecture from the Frontend's POV, meaning that the Frontend has no idea what architectural style our Backend has employed. So instead of making requests to *<http://multiplication/>*, *<http://gamification/>*, ..., *<http://microserviceName/>* we just make a request to one url *<http://application/>* and our Backend will handle where to route the request based on some url patterns.
 - How can we handle this? We go to Netflix OSS family once more, for the library `Spring Cloud Netflix Zuul` or another called `Spring Cloud Gateway`.
 - In our application we will introduce our `API Gateway` and a `Routing table` via `Zuul`. The Routing table is basically a table that maps the url coming in from the Frontend to an appropriate backend server/service. The API Gateway may be placed in front of several Load Balancer that handle load distribution to our Service instances. As usual, this new Gatway will exist as a microservice.
 ![Architecture with API Gateway & Routing Table](IMG_92F50E8F9766-1.jpeg)
@@ -96,3 +95,40 @@
 - `Eureka` is asked, by Zuul, for the list of services in it's Registry that have the same alias. Eureka returns the list.
 - `Ribbon` takes the list and returns one url based on it's load balancing strategy.
 - `Zuul` takes over and redirects to that location.
+- Now within our application, our gamification service can either go to our API gateway with it's requests to the multiplication service or it can use it's internally configured `Registry Client from Eureka` and `Load Balancer from Ribbon`:
+  - Getting the services to talk through the API Gateway is the better option but it does introduce an issue, `Edge Service` which would represent a Single-Point of Failure since the Gateway is only one. We can improve this by spinning multiple instances of the Gateway when load increases in our system but for normal operation we will need to introduce Redundancy for the Gateway by having another instance of the Gateway on standby.
+  - So the individual services will use their `Registry Client` and `Load Balancer` to locate the API Gateways instead of other services and the Load Balancer will chose which Gateway url to use.
+![Our Full Architecture with Zuul, Eureka and Ribbon](IMG_0207.jpg)
+
+## Version 7
+
+### Implementing API Gateway with <Zuul(deprecated)> Spring Cloud Gateway
+
+- We start this of with a new Springboot application with the Zuul dependency.
+
+```xml
+    <!-- Using Spring Cloud Gateway instead of Zuul because Zuul is deprecated -->
+  <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-gateway</artifactId>
+      <version>4.1.5</version>
+  </dependency>
+```
+
+- We will call it [gateway](./gateway/)
+- We change `application.properties` to `application.yml` for better readability.
+- Inside our yml file:
+  - We set the server port number
+  - Set the spring.cloud.routes which is a list:
+    - **id** will be an arbitrary name to be used to identify this route pattern
+    - **uri** will be the location to route the request to. *eg: http://localhost:8080*
+    - **predicate** is the uri request pattern to match to the incoming request *eg: Path=/api/fish/***
+    - **filters** some logic to apply to the incoming url to manipulate it as we see fit, *eg: ReWritePath=/api(?<remaining>/.*), ${remaining}* will remove the /api from the incoming url and reconstruct the url using the remaining. so a request url of http://localhost:8000/api/multiplications/** will become http://localhost:8080/multiplications/**
+- Now we go to the UI folder and find the places we are making requests to the services and change the urls to http://localhost:8000. Same for the services, with this, all requests will have a centralized handler, our gateway.
+
+- Let’s summarize the steps to make our system work once more:
+  1. Run the RabbitMQ server (if it’s not yet running in the background).
+  2. Run the gateway microservice.
+  3. Run the multiplication microservice.
+  4. Run the gamification microservice.
+  5. Run the Jetty web server from the ui root folder.
