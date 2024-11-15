@@ -58,14 +58,14 @@
 - **Register Client**: Contacts the registry for registered services using their alias.
 ![Architecture with Service Discovery](IMG_0203.jpg)
 
-- We will deploy this `Service Registry` as a separate mircoservice. The Multiplication and Gamification services will contact this Service Registry as soon as they start to register themselves using their `Register Agent`. 
+- We will deploy this `Service Registry` as a separate mircoservice. The Multiplication and Gamification services will contact this Service Registry as soon as they start to register themselves using their `Register Agent`.
 - After that they receive an alias(which is usually the microservice's name, eg: <http://multiplication/>, <http://gamification/>) that can be used to identify them within the registry. The services have a `Register Client` which will take the alias and use it to ask for the url of the registered service inside the `Service Registry`. Basically, the `Service Registry` is like a DNS that keeps registered services and their urls so that when `Registry Client`s come with an alias, they can be given the appropriate url for them to use to connect to their destination service.
 - So Gamification's Registry client will contact the Service Registry with the alias of the Multiplication Service and then get *http:localhost:8080* which will be used by Gamification to contact Multiplication.
 
 #### Client-Side Load Balancing
 
-- Now we have solved the hardcoded Urls aspect by employing `Service Discovery` but we still have an issue, When we spin up multiple instances of the same service how would the UI cbe able to connect to them? The `Registry` registers a service and assigns an alias so multiple instances of the same service will have the same alias(same url) and all these alias still map onto the same url(http:[localhost]:[port]) which was used to register the service at start-up. Now if we spin up multiple instances of the same service(each new instance will obviously operate on a new port) each instance will still be registered with the same name. Now we want to route each request to our multiple instances and for that we will need a Load Balancer, so why Client-Side Load Balancer and not the normal Reverse Proxy(Server-Side LB)? 
-- Well instead of the Backend deciding which instance to route to, the Frontend will handle that and this works perfectly because we are already using Service Discovery so it just makes sense that we tie the Load Balancer to the Frontend instead of the Backend. So for the load balancer we have a sweet library also from Netflix called `Ribbon`. 
+- Now we have solved the hardcoded Urls aspect by employing `Service Discovery` but we still have an issue, When we spin up multiple instances of the same service how would the UI cbe able to connect to them? The `Registry` registers a service and assigns an alias so multiple instances of the same service will have the same alias(same url) and all these alias still map onto the same url(http:[localhost]:[port]) which was used to register the service at start-up. Now if we spin up multiple instances of the same service(each new instance will obviously operate on a new port) each instance will still be registered with the same name. Now we want to route each request to our multiple instances and for that we will need a Load Balancer, so why Client-Side Load Balancer and not the normal Reverse Proxy(Server-Side LB)?
+- Well instead of the Backend deciding which instance to route to, the Frontend will handle that and this works perfectly because we are already using Service Discovery so it just makes sense that we tie the Load Balancer to the Frontend instead of the Backend. So for the load balancer we have a sweet library also from Netflix called `Ribbon`.
 - How would this new library integrate with our existing architecture?
   - Say we spin up two instances of the multiplication service, these will be registered in the `Service Registry` as soon as they start up.
   - Then when our Frontend or other Services want to communicate with this service they go to our `Ribbon` who will ask the `Service Registry` for the list of urls that represent his service that we want to talk to.
@@ -102,7 +102,7 @@
 
 ## Version 7
 
-### Implementing API Gateway with <Zuul(deprecated)> Spring Cloud Gateway
+### Implementing API Gateway with ~~Zuul(deprecated)~~ Spring Cloud Gateway
 
 - We start this of with a new Springboot application with the Zuul dependency.
 
@@ -117,14 +117,15 @@
 
 - We will call it [gateway](./gateway/)
 - We change `application.properties` to `application.yml` for better readability.
+- Dont forget to configure the CORS policy in the configuration folder like you did for the other services.
 - Inside our yml file:
   - We set the server port number
   - Set the spring.cloud.routes which is a list:
     - **id** will be an arbitrary name to be used to identify this route pattern
-    - **uri** will be the location to route the request to. *eg: http://localhost:8080*
+    - **uri** will be the location to route the request to. *eg: <http://localhost:8080>*
     - **predicate** is the uri request pattern to match to the incoming request *eg: Path=/api/fish/***
-    - **filters** some logic to apply to the incoming url to manipulate it as we see fit, *eg: ReWritePath=/api(?<remaining>/.*), ${remaining}* will remove the /api from the incoming url and reconstruct the url using the remaining. so a request url of http://localhost:8000/api/multiplications/** will become http://localhost:8080/multiplications/**
-- Now we go to the UI folder and find the places we are making requests to the services and change the urls to http://localhost:8000. Same for the services, with this, all requests will have a centralized handler, our gateway.
+    - **filters** some logic to apply to the incoming url to manipulate it as we see fit, *eg: ReWritePath=/api(?<remaining>/.*), ${remaining}* will remove the /api from the incoming url and reconstruct the url using the remaining. so a request url of <http://localhost:8000/api/multiplications/>**will become <http://localhost:8080/multiplications/>**
+- Now we go to the UI folder and find the places we are making requests to the services and change the urls to <http://localhost:8000>. Same for the services, with this, all requests will have a centralized handler, our gateway.
 
 - Let’s summarize the steps to make our system work once more:
   1. Run the RabbitMQ server (if it’s not yet running in the background).
@@ -132,3 +133,86 @@
   3. Run the multiplication microservice.
   4. Run the gamification microservice.
   5. Run the Jetty web server from the ui root folder.
+
+## Version 8
+
+### Implementing Service Discovery with Eureka
+
+- Now that we are sure that our Gatewa works perfectly, it's time to create our Service Registry by spinning up a Service Discovery Server with Eureka Server.
+- This Server will exist in it's own Microservice which we can scale and make highly available as we see fit.
+- Our dependency:
+
+```xml
+  <dependency>
+   <groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+  </dependency>
+```
+
+- Then go to the application entry point and annotate it with `@EnableEurekaServer`
+- We can run our Registry Server now but it is not connected to anything. No clients coming in to communicate, we fix this by introducing a Eureka Client to all our Microservices.
+- For our individual miroservices:
+  1. We introduce a dependency management block to resolve the Spring Cloud dependencies
+  
+```xml
+ <dependencyManagement>
+  <dependencies>
+   <dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-parent</artifactId>
+    <version>${spring-cloud.version}</version>
+    <type>pom</type>
+    <scope>import</scope>
+   </dependency>
+  </dependencies>
+ </dependencyManagement>
+```
+
+  2. A new property to reference the Spring Cloud's version.
+
+```xml
+<properties>
+  <java.version>23</java.version>
+  <spring-cloud.version>2023.0.3</spring-cloud.version>
+</properties>
+```
+
+  3. The dependency to include to enable the Service Registry Client.
+
+```xml
+<dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+  </dependency>
+```
+
+  4. An extra dependency for spring actuator which will contantly send it's healthcheck to the Service Registry to show it's still operational.
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+  5. Then inside application.properties or application.yml, you define the url of the Service Registry:
+
+```txt
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+```
+
+- Repeat the above for all the microservices and then for the gateway microservice because you want the gateway to register itself in the Service Registrya and also find other microservices.
+- Start your services now. While running Eureka servers, we often run into exceptions like:
+
+```bash
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+```
+
+- Fix it by adding this to the application.properties/yml file:
+
+```txt
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+```
+
+- Why does it show up? Well, Eureka Server also comes packaged with an internal Eureka Client so when you try to start the Server, the Client also registers itself and begins to query the registry that doesn't yet exist. We disable this by setting the flags to false.

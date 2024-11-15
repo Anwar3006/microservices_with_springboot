@@ -9,42 +9,48 @@ spring:
         gateway:
             routes:
                 - id: multiplications
-                  uri: http://localhost:8080
+                  uri: http://multiplication_service
                   predicates:
                     - Path=/api/multiplications/**
                   filters:
-                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+                  - StripPrefix=1
 
                 - id: results
-                  uri: http://localhost:8080
+                  uri: http://multiplication_service
                   predicates:
                     - Path=/api/results/**
                   filters:
-                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+                  - StripPrefix=1
 
                 - id: leaders
-                  uri: http://localhost:8081
+                  uri: lb://gamification_service
                   predicates:
                     - Path=/api/leaders/**
                   filters:
-                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+                  - StripPrefix=1
 
                 - id: stats
-                  uri: http://localhost:8081
+                  uri: lb://gamification_service
                   predicates:
                     - Path=/api/stats/**
                   filters:
-                  - RewritePath=/api(?<remaining>/.*), ${remaining}
+                  - StripPrefix=1
+            discovery:
+                locator:
+                    enabled: true
 
-
-management:
-  endpoint:
-    gateway:
+# Where this service can find the Service Registry
+eureka:
+  client:
+    service_url:
+      defaultZone: http://localhost:8761/eureka/
+    healthcheck:
       enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: gateway
+
+
+endpoints:
+  routes:
+    sensitive: false
 
 server:
   port: 8000
