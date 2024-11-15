@@ -30,13 +30,14 @@ public class MultiplicationAttemptController {
         this.attemptService = attemptService;
     }
 
+
     @PostMapping(name="", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MultiplicationAttempt> postAttempt(@RequestBody final MultiplicationAttempt attempt){
         MultiplicationAttempt result = new MultiplicationAttempt(attempt.getMultiplication(), 
                                                             attempt.getUser(), 
                                                             attempt.getResult(), 
                                                             multiplicationService.checkAttempt(attempt));
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "http://localhost:9090").body(result);
     }
 
     @GetMapping

@@ -1,3 +1,7 @@
+logging:
+  level:
+    '[org.springframework.web]': DEBUG
+    
 spring:
     application:
         name: gateway
@@ -7,30 +11,32 @@ spring:
 # Configuring the Spring Cloud Gateway
     cloud:
         gateway:
+            default-filters:
+                - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
             routes:
                 - id: multiplications
-                  uri: http://multiplication_service
+                  uri: lb://MULTIPLICATION
                   predicates:
                     - Path=/api/multiplications/**
                   filters:
                   - StripPrefix=1
 
                 - id: results
-                  uri: http://multiplication_service
+                  uri: lb://MULTIPLICATION
                   predicates:
                     - Path=/api/results/**
                   filters:
                   - StripPrefix=1
 
                 - id: leaders
-                  uri: lb://gamification_service
+                  uri: lb://GAMIFICATION
                   predicates:
-                    - Path=/api/leaders/**
+                    - Path=/api/leaders
                   filters:
                   - StripPrefix=1
 
                 - id: stats
-                  uri: lb://gamification_service
+                  uri: lb://GAMIFICATION
                   predicates:
                     - Path=/api/stats/**
                   filters:
