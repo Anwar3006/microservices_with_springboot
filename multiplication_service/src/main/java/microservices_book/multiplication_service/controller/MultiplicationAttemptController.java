@@ -31,6 +31,7 @@ public class MultiplicationAttemptController {
     }
 
 
+    
     @PostMapping(name="", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MultiplicationAttempt> postAttempt(@RequestBody final MultiplicationAttempt attempt){
         MultiplicationAttempt result = new MultiplicationAttempt(attempt.getMultiplication(), 

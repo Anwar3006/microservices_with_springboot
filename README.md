@@ -216,3 +216,10 @@ eureka.client.fetch-registry=false
 ```
 
 - Why does it show up? Well, Eureka Server also comes packaged with an internal Eureka Client so when you try to start the Server, the Client also registers itself and begins to query the registry that doesn't yet exist. We disable this by setting the flags to false.
+- We can still can an error in our Eureka Dashboard about Renews Threshold being below Renews and we can solve this by adding this to our service registry's application.properties file:
+
+```txt
+eureka.server.renewal-percent-threshold=0.49
+```
+
+- Then to solve our CORS issues in Gateway service we set it's application.yml as [this](./gateway/src/main/resources/application.yml)

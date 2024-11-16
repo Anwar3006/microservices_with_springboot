@@ -11,8 +11,17 @@ spring:
 # Configuring the Spring Cloud Gateway
     cloud:
         gateway:
-            default-filters:
-                - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            globalcors:
+              add-to-simple-url-handler-mapping: true
+              cors-configurations:
+                '[/**]':
+                  allowed-origins: '*'
+                  allowed-methods:
+                    - GET
+                    - POST
+                    - PUT
+                    - OPTIONS
+                  allowed-headers: '*'
             routes:
                 - id: multiplications
                   uri: lb://MULTIPLICATION
@@ -44,19 +53,14 @@ spring:
             discovery:
                 locator:
                     enabled: true
+            default-filters:
+              - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 
 # Where this service can find the Service Registry
 eureka:
   client:
     service_url:
       defaultZone: http://localhost:8761/eureka/
-    healthcheck:
-      enabled: true
-
-
-endpoints:
-  routes:
-    sensitive: false
 
 server:
   port: 8000
