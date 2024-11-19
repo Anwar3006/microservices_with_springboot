@@ -58,6 +58,13 @@
     		<artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
 
+		<!-- For LoadBalancing -->
+		<dependency>
+    		<groupId>org.springframework.cloud</groupId>
+   			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+		</dependency>
+
+
 		<!-- Actuator for monitoring the gateway -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

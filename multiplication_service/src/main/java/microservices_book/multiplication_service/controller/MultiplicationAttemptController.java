@@ -2,6 +2,7 @@ package microservices_book.multiplication_service.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,22 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
 import microservices_book.multiplication_service.domain.MultiplicationAttempt;
 import microservices_book.multiplication_service.service.MultiplicationAttemptService;
 import microservices_book.multiplication_service.service.MultiplicationService;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/results")
 public class MultiplicationAttemptController {
     
     private final MultiplicationService multiplicationService;
     private final MultiplicationAttemptService attemptService;
-    
+    private final int serverPort;
+
     public MultiplicationAttemptController(MultiplicationService multiplicationService,
-            MultiplicationAttemptService attemptService) {
+            MultiplicationAttemptService attemptService, @Value("${server.port}") final int serverPort) {
         this.multiplicationService = multiplicationService;
         this.attemptService = attemptService;
+        this.serverPort = serverPort;
     }
 
 
@@ -49,6 +53,7 @@ public class MultiplicationAttemptController {
     
     @GetMapping("/{attemptId}")
     public ResponseEntity<MultiplicationAttempt> getAttemptById(@PathVariable Long attemptId) {
+        log.info("Retreiving result {} from server port {}", attemptId, serverPort);
         MultiplicationAttempt attempt = attemptService.getAttemptById(attemptId);
         return ResponseEntity.ok(attempt);
     }

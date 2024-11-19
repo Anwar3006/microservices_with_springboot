@@ -1,66 +1,70 @@
 logging:
   level:
-    '[org.springframework.web]': DEBUG
-    
+    "[org.springframework.web]": DEBUG
+
 spring:
-    application:
-        name: gateway
-    main:
-        web-application-type: REACTIVE
+  application:
+    name: gateway
+  main:
+    web-application-type: REACTIVE
 
-# Configuring the Spring Cloud Gateway
-    cloud:
-        gateway:
-            globalcors:
-              add-to-simple-url-handler-mapping: true
-              cors-configurations:
-                '[/**]':
-                  allowed-origins: '*'
-                  allowed-methods:
-                    - GET
-                    - POST
-                    - PUT
-                    - OPTIONS
-                  allowed-headers: '*'
-            routes:
-                - id: multiplications
-                  uri: lb://MULTIPLICATION
-                  predicates:
-                    - Path=/api/multiplications/**
-                  filters:
-                  - StripPrefix=1
+  # Configuring the Spring Cloud Gateway
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          "[/**]":
+            allowed-origins: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - OPTIONS
+            allowed-headers: "*"
+      routes:
+        - id: multiplications
+          uri: lb://MULTIPLICATION
+          predicates:
+            - Path=/api/multiplications/**
+          filters:
+            - StripPrefix=1
 
-                - id: results
-                  uri: lb://MULTIPLICATION
-                  predicates:
-                    - Path=/api/results/**
-                  filters:
-                  - StripPrefix=1
+        - id: results
+          uri: lb://MULTIPLICATION
+          predicates:
+            - Path=/api/results/**
+          filters:
+            - StripPrefix=1
 
-                - id: leaders
-                  uri: lb://GAMIFICATION
-                  predicates:
-                    - Path=/api/leaders
-                  filters:
-                  - StripPrefix=1
+        - id: leaders
+          uri: lb://GAMIFICATION
+          predicates:
+            - Path=/api/leaders
+          filters:
+            - StripPrefix=1
 
-                - id: stats
-                  uri: lb://GAMIFICATION
-                  predicates:
-                    - Path=/api/stats/**
-                  filters:
-                  - StripPrefix=1
-            discovery:
-                locator:
-                    enabled: true
-            default-filters:
-              - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - id: stats
+          uri: lb://GAMIFICATION
+          predicates:
+            - Path=/api/stats/**
+          filters:
+            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+    loadbalancer:
+      configurations: health-check
 
 # Where this service can find the Service Registry
 eureka:
   client:
     service_url:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
 
 server:
   port: 8000
