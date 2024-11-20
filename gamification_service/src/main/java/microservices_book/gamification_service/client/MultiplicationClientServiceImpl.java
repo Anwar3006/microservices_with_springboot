@@ -30,7 +30,11 @@ public class MultiplicationClientServiceImpl implements MultiplicationClientServ
     }
     
 
-    public MultiplicationAttempt getAttemptByIdFallback(Long attemptId){
+    public MultiplicationAttempt getAttemptByIdFallback(Long attemptId, Throwable throwable) {
+        // Log the exception for debugging
+        System.err.println("Fallback triggered due to: " + throwable.getMessage());
+        // Return a default response
         return new MultiplicationAttempt("NoUser", 0, 0, 0, true);
     }
+    
 }
