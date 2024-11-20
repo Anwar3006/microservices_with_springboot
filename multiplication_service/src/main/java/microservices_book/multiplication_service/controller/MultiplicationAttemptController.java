@@ -56,5 +56,6 @@ public class MultiplicationAttemptController {
         log.info("Retreiving result {} from server port {}", attemptId, serverPort);
         MultiplicationAttempt attempt = attemptService.getAttemptById(attemptId);
         return ResponseEntity.ok(attempt);
+        // return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); added to test the fallback mechanism for the Gamification-Multiplication interaction.
     }
 }

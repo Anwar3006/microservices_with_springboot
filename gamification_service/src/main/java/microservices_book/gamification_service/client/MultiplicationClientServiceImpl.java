@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import microservices_book.gamification_service.client.dto.MultiplicationAttempt;
 
 
@@ -22,9 +23,14 @@ public class MultiplicationClientServiceImpl implements MultiplicationClientServ
 
 
 
+    @CircuitBreaker(name = "multiplicationAttempt", fallbackMethod = "getAttemptByIdFallback")
     @Override
     public MultiplicationAttempt getAttemptById(Long attemptId) {
         return restTemplate.getForObject(multiplicationHost + "/results/" + attemptId, MultiplicationAttempt.class);
     }
     
+
+    public MultiplicationAttempt getAttemptByIdFallback(Long attemptId){
+        return new MultiplicationAttempt("NoUser", 0, 0, 0, true);
+    }
 }

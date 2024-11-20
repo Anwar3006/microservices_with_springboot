@@ -307,3 +307,66 @@ public class CustomLoadBalancerConfiguration {
 }
 
 ```
+
+#### Circuit Breaker
+
+- Now our application works well with Spring Cloud Gateway, Eureka and Spring Cloud LoadBalancer and we can scale effeciently but we still have issues. As seen in the previous step, when an instance goes down, it breaks our entire application, this isn't good. We can solve this by implementing a Crcuit Breaker mechanism.
+- This works by isolating instance failures and preventing the Gateway from routing requests to it, giving the failing instance some time to recover/be repaired.
+- To implement a fallback mechanism on the Gateway, simply add this to the gateway's application.yml:
+
+```yml
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: CircuitBreaker
+          args:
+            name: defaultCircuitBreaker
+            fallbackUri: forward:/defaultFallback
+```
+
+- To account for situations where the gamification can not reach the multiplication(because the service is down), we add a Circuit Breaker on Gamification and configure an endpoint in Multiplication for this:
+- Add dependency in Gamification:
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+</dependency>
+
+```
+
+- Gamification communicates with Multiplication through an API endpoint, so we add a fallback method inside our Gamification RestTemplate client to mimic the return of that method for Resilience to use:
+
+```java
+  @CircuitBreaker(name = "multiplicationAttempt", fallbackMethod = "getAttemptByIdFallback")
+  @Override
+  public MultiplicationAttempt getAttemptById(Long attemptId) {
+      return restTemplate.getForObject(multiplicationHost + "/results/" + attemptId, MultiplicationAttempt.class);
+  }
+
+
+  public MultiplicationAttempt getAttemptByIdFallback(Long attemptId){
+      return new MultiplicationAttempt("NoUser", 0, 0, 0, true);
+  }
+```
+
+- Then we configure Resilience$j in the yml file:
+- This configuration ensures:
+  - The circuit breaker evaluates the last 10 calls.
+  - At least 5 calls are required for the circuit breaker to be triggered.
+  - If the failure rate is 50% or higher, the circuit breaker will open.
+
+```yml
+resilience4j:
+  circuitbreaker:
+    instances:
+      multiplication:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+```
